@@ -1,0 +1,8 @@
+build*/
+.ccache/
+.vscode/.cache/
+.vscode/compile_commands.json
+__pycache__/
+.pytest_cache/
+*.pyc
+CMakeUserPresets.json
