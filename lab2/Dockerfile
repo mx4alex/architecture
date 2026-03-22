@@ -6,7 +6,7 @@ COPY configs/ configs/
 COPY src/ src/
 COPY CMakeLists.txt CMakePresets.json ./
 
-RUN cmake --preset release \
+RUN cmake --preset release -DUSERVER_FEATURE_TESTSUITE=OFF \
     && cmake --build build-release -j$(nproc) --target budget_service
 
 FROM --platform=linux/amd64 ubuntu:24.04
