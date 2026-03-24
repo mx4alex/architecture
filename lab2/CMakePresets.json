@@ -21,8 +21,7 @@
             "inherits": ["common-flags"],
             "binaryDir": "${sourceDir}/build-debug",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "USERVER_SANITIZE": "addr;ub"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
             }
         },
         {

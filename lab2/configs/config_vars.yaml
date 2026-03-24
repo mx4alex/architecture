@@ -1,6 +1,6 @@
 worker-threads: 4
 worker-fs-threads: 2
 logger-level: info
-is_testing: false
+testsuite-enabled: false
 server-port: 8080
 jwt-secret: budget-service-secret-key

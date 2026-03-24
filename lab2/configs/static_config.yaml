@@ -29,13 +29,13 @@ components_manager:
         testsuite-support: {}
 
         http-client:
-            load-enabled: $is_testing
+            load-enabled: $testsuite-enabled
 
         dns-client:
             fs-task-processor: fs-task-processor
 
         tests-control:
-            load-enabled: $is_testing
+            load-enabled: $testsuite-enabled
             path: /tests/{action}
             method: POST
             task_processor: main-task-processor

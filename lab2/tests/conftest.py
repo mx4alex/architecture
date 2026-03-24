@@ -11,10 +11,5 @@ def service_source_dir():
 
 
 @pytest.fixture(scope='session')
-def initial_data_path(service_source_dir):
-    return service_source_dir / 'tests' / 'initial_data'
-
-
-@pytest.fixture(scope='session')
-def config_fallback_path(service_source_dir):
-    return service_source_dir / 'tests' / 'dynamic_config_fallback.json'
+def config_fallback_path():
+    return None

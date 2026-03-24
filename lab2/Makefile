@@ -62,6 +62,7 @@ format:
 docker-%:
 	docker run $(DOCKER_ARGS) \
 		--network=host \
+		--privileged \
 		-v $$PWD:$$PWD \
 		-w $$PWD \
 		$(DOCKER_IMAGE) \

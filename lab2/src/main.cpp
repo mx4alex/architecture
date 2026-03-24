@@ -5,7 +5,7 @@
 #include "storage/user/user_storage.hpp"
 
 #include <userver/clients/dns/component.hpp>
-#include <userver/clients/http/component.hpp>
+#include <userver/clients/http/component_list.hpp>
 #include <userver/components/minimal_server_component_list.hpp>
 #include <userver/server/handlers/ping.hpp>
 #include <userver/server/handlers/tests_control.hpp>
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
             .Append<userver::server::handlers::TestsControl>()
             .Append<userver::components::TestsuiteSupport>()
             .Append<userver::clients::dns::Component>()
-            .Append<userver::components::HttpClient>()
+            .AppendComponentList(userver::clients::http::ComponentList())
             .Append<budget::UserStorage>()
             .Append<budget::BudgetStorage>();
 
