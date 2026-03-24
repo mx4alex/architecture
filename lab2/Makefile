@@ -5,9 +5,6 @@ DOCKER_IMAGE ?= ghcr.io/userver-framework/ubuntu-24.04-userver:latest
 DOCKER_ARGS = $(shell /bin/test -t 0 && /bin/echo -it || echo)
 PRESETS ?= debug release
 
-.PHONY: all
-all: test-debug test-release
-
 # Run cmake
 .PHONY: $(addprefix cmake-, $(PRESETS))
 $(addprefix cmake-, $(PRESETS)): cmake-%:
@@ -27,11 +24,6 @@ $(addprefix test-, $(PRESETS)): test-%: build-%/CMakeCache.txt
 	cmake --build build-$* -j $(NPROCS)
 	cd build-$* && ((test -t 1 && GTEST_COLOR=1 PYTEST_ADDOPTS="--color=yes" ctest -V) || ctest -V)
 
-# Start the service
-.PHONY: $(addprefix start-, $(PRESETS))
-$(addprefix start-, $(PRESETS)): start-%:
-	cmake --build build-$* -v --target start-$(PROJECT_NAME)
-
 # Cleanup data
 .PHONY: $(addprefix clean-, $(PRESETS))
 $(addprefix clean-, $(PRESETS)): clean-%:
@@ -43,14 +35,6 @@ dist-clean:
 	rm -rf tests/__pycache__/
 	rm -rf tests/.pytest_cache/
 	rm -rf .ccache
-
-# Install
-.PHONY: $(addprefix install-, $(PRESETS))
-$(addprefix install-, $(PRESETS)): install-%: build-%
-	cmake --install build-$* -v --component $(PROJECT_NAME)
-
-.PHONY: install
-install: install-release
 
 # Format the sources
 .PHONY: format
