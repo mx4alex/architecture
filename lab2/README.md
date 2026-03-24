@@ -14,21 +14,21 @@ REST API сервис для управления личным бюджетом.
 
 ## API Endpoints
 
-| Метод | URL | Описание | Аутентификация |
-|-------|-----|----------|----------------|
-| POST | `/api/v1/auth/register` | Регистрация пользователя | Нет |
-| POST | `/api/v1/auth/login` | Аутентификация, получение токена | Нет |
-| GET | `/api/v1/users/search` | Поиск по логину или имени/фамилии | Bearer Token |
-| POST | `/api/v1/incomes` | Создать планируемый доход | Bearer Token |
-| GET | `/api/v1/incomes` | Перечень планируемых доходов | Bearer Token |
-| PUT | `/api/v1/incomes/{id}` | Обновить планируемый доход | Bearer Token |
-| DELETE | `/api/v1/incomes/{id}` | Удалить планируемый доход | Bearer Token |
-| POST | `/api/v1/expenses` | Создать планируемый расход | Bearer Token |
-| GET | `/api/v1/expenses` | Перечень планируемых расходов | Bearer Token |
-| PUT | `/api/v1/expenses/{id}` | Обновить планируемый расход | Bearer Token |
-| DELETE | `/api/v1/expenses/{id}` | Удалить планируемый расход | Bearer Token |
-| GET | `/api/v1/budget/dynamics` | Динамика бюджета за период | Bearer Token |
-| GET | `/ping` | Health check | Нет |
+| Метод | URL | Описание |
+|-------|-----|----------|
+| POST | `/api/v1/auth/register` | Регистрация пользователя |
+| POST | `/api/v1/auth/login` | Аутентификация, получение токена |
+| GET | `/api/v1/users/search` | Поиск по логину или имени/фамилии |
+| POST | `/api/v1/incomes` | Создать планируемый доход |
+| GET | `/api/v1/incomes` | Перечень планируемых доходов |
+| PUT | `/api/v1/incomes/{id}` | Обновить планируемый доход |
+| DELETE | `/api/v1/incomes/{id}` | Удалить планируемый доход |
+| POST | `/api/v1/expenses` | Создать планируемый расход |
+| GET | `/api/v1/expenses` | Перечень планируемых расходов |
+| PUT | `/api/v1/expenses/{id}` | Обновить планируемый расход |
+| DELETE | `/api/v1/expenses/{id}` | Удалить планируемый расход |
+| GET | `/api/v1/budget/dynamics` | Динамика бюджета за период |
+| GET | `/ping` | Health check |
 
 ## Запуск
 
