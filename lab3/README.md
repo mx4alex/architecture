@@ -45,8 +45,6 @@ REST API сервис для управления личным бюджетом 
 
 ## Запуск
 
-### Docker Compose
-
 ```bash
 docker compose up --build
 ```
