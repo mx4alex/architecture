@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: budget_db
+      POSTGRES_USER: budget_user
+      POSTGRES_PASSWORD: budget_password
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./data.sql:/docker-entrypoint-initdb.d/02_data.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U budget_user -d budget_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  budget-service:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure:5
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  budget-service-dev:
+    image: ghcr.io/userver-framework/ubuntu-24.04-userver:latest
+    privileged: true
+    network_mode: bridge
+    environment:
+      - CCACHE_DIR=/app/.ccache
+    volumes:
+      - .:/app:rw
+    ports:
+      - "8080:8080"
+    working_dir: /app
+    entrypoint:
+      - ./run_as_user.sh
+    profiles:
+      - dev
+
+volumes:
+  pgdata:
