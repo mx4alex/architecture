@@ -1,4 +1,4 @@
-# Budget Service — PostgreSQL + MongoDB
+# Budget Service
 
 REST API сервис для управления личным бюджетом. Применён паттерн **polyglot persistence**:
 пользователи хранятся в PostgreSQL, планируемые доходы и расходы — в MongoDB.
