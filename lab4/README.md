@@ -1,16 +1,16 @@
 # Budget Service
 
-REST API сервис для управления личным бюджетом. Применён паттерн **polyglot persistence**:
-пользователи хранятся в PostgreSQL, планируемые доходы и расходы — в MongoDB.
+REST API сервис для управления личным бюджетом. Применён паттерн polyglot persistence:
+пользователи хранятся в PostgreSQL, планируемые доходы и расходы - в MongoDB.
 
 Реализован на C++ с использованием фреймворка [userver](https://userver.tech/).
 
 ## Файлы результата
 
-- [`schema_design.md`](schema_design.md) — описание проектирования документной модели с обоснованием выбора polyglot persistence и embedded/references
-- [`data.js`](db/mongo/data.js) — скрипт с тестовыми данными для MongoDB (доходы/расходы/счётчики)
-- [`queries.js`](db/mongo/queries.js) — MongoDB запросы для всех CRUD операций и aggregation pipelines
-- [`validation.js`](db/mongo/validation.js) — скрипт с валидацией схем, создание коллекций и индексов, проверка невалидной вставки
+- [`schema_design.md`](schema_design.md) - описание проектирования документной модели с обоснованием выбора polyglot persistence и embedded/references
+- [`data.js`](db/mongo/data.js) - скрипт с тестовыми данными для MongoDB (доходы/расходы/счётчики)
+- [`queries.js`](db/mongo/queries.js) - MongoDB запросы для всех CRUD операций и aggregation pipelines
+- [`validation.js`](db/mongo/validation.js) - скрипт с валидацией схем, создание коллекций и индексов, проверка невалидной вставки
 
 ## Архитектура
 
