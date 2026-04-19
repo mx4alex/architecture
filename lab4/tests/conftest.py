@@ -88,8 +88,18 @@ def config_fallback_path(service_source_dir):
 
 @pytest.fixture(scope='session')
 def pgsql_local(service_source_dir, pgsql_local_create):
-    databases = discover.find_schemas(
-        'budget_service',
-        [service_source_dir / 'schemas' / 'postgresql'],
+    schema_path = service_source_dir / 'db' / 'postgres' / 'schema.sql'
+    db = discover.PgShardedDatabase(
+        service_name='budget_service',
+        dbname='budget_db',
+        shards=[
+            discover.PgShard(
+                shard_id=0,
+                pretty_name='budget_db',
+                dbname='budget_service_budget_db',
+                files=[schema_path],
+                migrations=[],
+            ),
+        ],
     )
-    return pgsql_local_create(list(databases.values()))
+    return pgsql_local_create([db])
