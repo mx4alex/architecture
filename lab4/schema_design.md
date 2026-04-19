@@ -1,6 +1,6 @@
 # Проектирование документной модели
 
-## 1. Подход: Polyglot Persistence
+### 1. Подход Polyglot Persistence
 
 | Сущность | СУБД | Почему именно так |
 |----------|------|-------------------|
@@ -11,9 +11,9 @@
 Связь между PostgreSQL и MongoDB поддерживается на уровне приложения: `user_id` в Mongo-документах ссылается на `users.id`
 из PostgreSQL. FK-ограничения здесь невозможны, поэтому консистентность обеспечивается логикой сервиса.
 
-## 2. Коллекции MongoDB
+### 2. Коллекции MongoDB
 
-### `planned_incomes`
+#### `planned_incomes`
 
 Пример документа:
 
@@ -33,7 +33,7 @@
 
 Категории в данных: `Зарплата`, `Премия`, `Фриланс`, `Инвестиции`, `Подработка`, `Арендный доход`.
 
-### `planned_expenses`
+#### `planned_expenses`
 
 Пример документа:
 
@@ -52,7 +52,7 @@
 
 Категории в данных: `Аренда`, `Продукты`, `Транспорт`, `Коммунальные`, `Развлечения`, `Одежда`, `Ипотека`, `Здоровье`, `Образование`.
 
-### `counters`
+#### `counters`
 
 Техническая коллекция для генерации автоинкрементных идентификаторов. Каждый документ — отдельный счётчик:
 
@@ -63,9 +63,9 @@
 
 Операция `findAndModify` с `$inc` и `returnNew: true` гарантирует атомарность и уникальность id даже при конкурентных запросах.
 
-## 3. Embedded vs References
+### 3. Embedded vs References
 
-### Связь `users (PostgreSQL)` - `planned_incomes / planned_expenses (MongoDB)`
+#### Связь `users (PostgreSQL)` - `planned_incomes / planned_expenses (MongoDB)`
 
 **Выбран подход: references** через поле `user_id`.
 
@@ -75,12 +75,12 @@
 - у одного пользователя могут быть тысячи записей бюджета, а embedding раздул бы документ users в Postgres;
 - доходы/расходы читаются и обновляются независимо от профиля пользователя;
 
-### Embedded-поля внутри документов бюджета
+#### Embedded-поля внутри документов бюджета
 
 В схемах коллекций предусмотрены вложенные поля:
 
-- `tags: string[]` — массив меток для произвольной классификации (`food`, `recurring`, `vacation`). Удобно для `$in`, `$push`, `$addToSet`, `$pull`.
-- `meta: object` — произвольный объект с расширяемыми атрибутами (`recurring`, `source`, `currency_rate`).
+- `tags: string[]` - массив меток для произвольной классификации (`food`, `recurring`, `vacation`). Удобно для `$in`, `$push`, `$addToSet`, `$pull`.
+- `meta: object` - произвольный объект с расширяемыми атрибутами (`recurring`, `source`, `currency_rate`).
 
 Обоснование выбора embedded:
 
@@ -89,32 +89,32 @@
 - исключают необходимость дополнительных `$lookup`-запросов;
 - схема расширяема без миграций.
 
-## 4. Используемые типы данных MongoDB
+### 4. Используемые типы данных MongoDB
 
 | Тип | Где применяется |
 |-----|----------------|
 | `long` (Int64) | `id`, `user_id` |
 | `string` | `category`, `date` (ISO 8601), `description` |
-| `double` | `amount` — денежные суммы |
-| `object` | `meta` — вложенные документы |
-| `array` | `tags` — массивы строк |
+| `double` | `amount` - денежные суммы |
+| `object` | `meta` - вложенные документы |
+| `array` | `tags` - массивы строк |
 | `bool` | `meta.recurring` |
-| `date` | `created_at` — временные метки |
+| `date` | `created_at` - временные метки |
 
-## 5. Индексы
+### 5. Индексы
 
-### MongoDB
+#### MongoDB
 
 - `planned_incomes.user_id + planned_incomes.date` (compound) — выборка доходов пользователя и аналитика за период;
 - `planned_expenses.user_id + planned_expenses.date` (compound) — выборка расходов пользователя и аналитика за период.
 
-### PostgreSQL (для коллекции `users`)
+#### PostgreSQL (для коллекции `users`)
 
-- `users_pkey` (PK) — поиск по id;
-- `users_login_key` (UNIQUE) — поиск/проверка по логину;
-- `idx_users_first_name_trgm`, `idx_users_last_name_trgm` (GIN + `pg_trgm`) — поиск по маске имени/фамилии через ILIKE.
+- `users_pkey` (PK) - поиск по id;
+- `users_login_key` (UNIQUE) - поиск/проверка по логину;
+- `idx_users_first_name_trgm`, `idx_users_last_name_trgm` (GIN + `pg_trgm`) - поиск по маске имени/фамилии через ILIKE.
 
-## 6. Валидация (`$jsonSchema`)
+### 6. Валидация (`$jsonSchema`)
 
 Для коллекций `planned_incomes` и `planned_expenses` подключена строгая валидация (`validationLevel: strict`, `validationAction: error`):
 
