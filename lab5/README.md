@@ -1,14 +1,14 @@
-# Budget Service — кеширование и rate limiting
+# Budget Service - кеширование и rate limiting
 
 Вариант №12 - REST API для личного бюджета. Добавлены **Redis-кеш** и **rate limiting**.
 
 ## Файлы результата
 
-- [`performance_design.md`](performance_design.md) — анализ hot-paths,
+- [`performance_design.md`](performance_design.md) - анализ hot-paths,
   выбор стратегий кеширования и алгоритмов rate limiting, метрики и SLO.
-- [`src/cache/`](src/cache) — компонент `CacheService` (Cache-Aside поверх
+- [`src/cache/`](src/cache) - компонент `CacheService` (Cache-Aside поверх
   `userver::storages::redis`).
-- [`src/ratelimit/`](src/ratelimit) — компонент `RateLimiter` (Fixed window
+- [`src/ratelimit/`](src/ratelimit) - компонент `RateLimiter` (Fixed window
   counter и Sliding window log).
 
 ## Архитектура
@@ -27,14 +27,14 @@
 
 | Endpoint | Кеш | Rate limit |
 |----------|-----|------------|
-| `POST /api/v1/auth/register` | — | Fixed window 5/мин на IP |
-| `POST /api/v1/auth/login`    | — | Sliding window log 10/мин на IP |
+| `POST /api/v1/auth/register` | - | Fixed window 5/мин на IP |
+| `POST /api/v1/auth/login`    | - | Sliding window log 10/мин на IP |
 | `GET  /api/v1/users/search?mask=…` | Cache-Aside, TTL 120 с | защита глобальным throttling |
-| `GET  /api/v1/users/search?login=…` | точечный по uniq-индексу, дешевле без кеша | — |
-| `GET  /api/v1/incomes`       | Cache-Aside, TTL 60 с | — |
-| `GET  /api/v1/expenses`      | Cache-Aside, TTL 60 с | — |
+| `GET  /api/v1/users/search?login=…` | точечный по uniq-индексу, дешевле без кеша | - |
+| `GET  /api/v1/incomes`       | Cache-Aside, TTL 60 с | - |
+| `GET  /api/v1/expenses`      | Cache-Aside, TTL 60 с | - |
 | `GET  /api/v1/budget/dynamics` | Cache-Aside, TTL 300 | Fixed window 60/мин на user |
-| `POST/PUT/DELETE` доходов/расходов | инвалидация (`INCR cv:budget:{uid}`) | — |
+| `POST/PUT/DELETE` доходов/расходов | инвалидация (`INCR cv:budget:{uid}`) | - |
 
 В ответе на закешированный GET добавляется заголовок `X-Cache: HIT|MISS`.
 В ответе на rate-limited endpoint всегда есть:
