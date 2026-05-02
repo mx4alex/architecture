@@ -1,0 +1,9 @@
+worker-threads: 4
+worker-fs-threads: 2
+logger-level: info
+testsuite-enabled: false
+server-port: 8080
+jwt-secret: budget-service-secret-key
+db-url: 'postgresql://budget_user:budget_password@localhost:5432/budget_db'
+mongo-url: 'mongodb://root:root@localhost:27017/budget_db?authSource=admin'
+secdist-path: 'configs/secdist_local.json'

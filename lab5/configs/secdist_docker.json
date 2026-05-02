@@ -1,0 +1,14 @@
+{
+    "redis_settings": {
+        "budget-cache": {
+            "password": "",
+            "secure_connection": false,
+            "shards": [
+                {"name": "budget-cache-shard0"}
+            ],
+            "sentinels": [
+                {"host": "redis", "port": 6379}
+            ]
+        }
+    }
+}

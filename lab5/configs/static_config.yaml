@@ -1,0 +1,164 @@
+components_manager:
+    coro_pool:
+        stack_usage_monitor_enabled: false
+
+    task_processors:
+        main-task-processor:
+            worker_threads: $worker-threads
+
+        fs-task-processor:
+            worker_threads: $worker-fs-threads
+
+    default_task_processor: main-task-processor
+
+    components:
+        server:
+            listener:
+                port: $server-port
+                task_processor: main-task-processor
+
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: $logger-level
+                    overflow_behavior: discard
+
+        dynamic-config:
+            defaults:
+                HTTP_CLIENT_CONNECTION_POOL_SIZE: 1000
+                POSTGRES_DEFAULT_COMMAND_CONTROL:
+                    network_timeout_ms: 5000
+                    statement_timeout_ms: 3000
+
+        testsuite-support: {}
+
+        http-client:
+            load-enabled: $testsuite-enabled
+
+        dns-client:
+            fs-task-processor: fs-task-processor
+
+        tests-control:
+            load-enabled: $testsuite-enabled
+            path: /tests/{action}
+            method: POST
+            task_processor: main-task-processor
+
+        handler-ping:
+            path: /ping
+            method: GET
+            task_processor: main-task-processor
+            throttling_enabled: false
+            url_trailing_slash: strict-match
+
+        postgres-db:
+            dbconnection: $db-url
+            blocking_task_processor: fs-task-processor
+            dns_resolver: async
+            sync-start: true
+
+        mongo-db:
+            dbconnection: $mongo-url
+            appname: budget-service
+            conn_timeout: 2s
+            so_timeout: 10s
+            queue_timeout: 1s
+            initial_size: 4
+            max_size: 32
+
+        secdist: {}
+
+        default-secdist-provider:
+            config: $secdist-path
+            missing-ok: true
+            environment-secrets-key: SECDIST_CONFIG
+
+        budget-cache-redis:
+            groups:
+              - config_name: budget-cache
+                db: budget-cache
+                sharding_strategy: RedisStandalone
+            subscribe_groups: []
+            thread_pools:
+                redis_thread_pool_size: 4
+                sentinel_thread_pool_size: 1
+
+        cache-service:
+            redis_database_name: budget-cache-redis
+            redis_client_name: budget-cache
+            default_ttl_ms: 60000
+
+        rate-limiter:
+            redis_database_name: budget-cache-redis
+            redis_client_name: budget-cache
+            login_limit: 10
+            login_window_seconds: 60
+            register_limit: 5
+            register_window_seconds: 60
+            dynamics_limit: 60
+            dynamics_window_seconds: 60
+
+        user-storage:
+            jwt_secret: $jwt-secret
+
+        budget-storage: {}
+
+        handler-register:
+            path: /api/v1/auth/register
+            method: POST
+            task_processor: main-task-processor
+
+        handler-login:
+            path: /api/v1/auth/login
+            method: POST
+            task_processor: main-task-processor
+
+        handler-user-search:
+            path: /api/v1/users/search
+            method: GET
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+
+        handler-incomes:
+            path: /api/v1/incomes
+            method: GET,POST
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+
+        handler-income-by-id:
+            path: /api/v1/incomes/{id}
+            method: PUT,DELETE
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+
+        handler-expenses:
+            path: /api/v1/expenses
+            method: GET,POST
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+
+        handler-expense-by-id:
+            path: /api/v1/expenses/{id}
+            method: PUT,DELETE
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+
+        handler-budget-dynamics:
+            path: /api/v1/budget/dynamics
+            method: GET
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
