@@ -102,7 +102,9 @@ std::int64_t CacheService::BumpVersion(const std::string& version_key) const {
                 ->Expire(version_key, std::chrono::seconds{24 * 3600},
                          command_control_)
                 .Get();
-        } catch (const userver::storages::redis::Exception&) {
+        } catch (const userver::storages::redis::Exception& ex) {
+            LOG_INFO() << "cache version expire refresh failed key="
+                       << version_key << " err=" << ex.what();
         }
         return value;
     } catch (const userver::storages::redis::Exception& ex) {
