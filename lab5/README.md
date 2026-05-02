@@ -15,7 +15,7 @@
 
 | Слой | Технология | Назначение |
 |------|------------|------------|
-| HTTP-фреймворк | [userver](https://userver.tech/) (C++17) | асинхронный server, JWT-bearer auth |
+| HTTP-фреймворк | userver (C++17) | асинхронный server, JWT-bearer auth |
 | Хранилище пользователей | PostgreSQL 16 + `pgcrypto` + GIN trgm | unique login, поиск ILIKE |
 | Хранилище доходов/расходов | MongoDB 8.0 | гибкая схема, агрегация по периодам |
 | Кеш | Redis 7 | Cache-Aside для list/aggregation эндпоинтов |
